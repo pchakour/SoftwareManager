@@ -1,0 +1,31 @@
+[
+    {
+        "type": "string",
+        "title": "Repositories",
+        "desc": "Enter repositories list separate with a semi colon",
+        "section": "launcher",
+        "key": "repositories"
+    },
+    {
+        "type": "options",
+        "title": "Software update",
+        "desc": "Specify the software update policy",
+        "section": "launcher",
+        "key": "update",
+        "options" : ["auto", "popup", "manual"]
+    },
+    {
+        "type": "path",
+        "title": "Install directory",
+        "desc": "Path to install directory",
+        "section": "launcher",
+        "key": "install_path"
+    },
+    {
+        "type": "string",
+        "title": "Git",
+        "desc": "Path to your git",
+        "section": "git",
+        "key": "binary"
+    }
+]

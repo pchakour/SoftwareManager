@@ -1,0 +1,70 @@
+#:import lv kivy.uix.listview
+#:import la kivy.adapters.listadapter
+#:import label kivy.uix.label
+                    
+<SoftwareManagerGui>:
+    orientation: 'vertical'
+    size_hint: 1, 1
+                 
+    TabbedPanel:
+        id: pannels
+        size_hint: 1, .95
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        do_default_tab: False
+                   
+        TabbedPanelItem:
+            id: tab_installed_software_id
+            text: 'Installed'
+            background_color: (1, 1, 1, 0.5)
+            ScrollView:
+                id: scroll_installed_software_id
+                size_hint:(1, 1)
+                  
+        TabbedPanelItem:
+            id: tab_all_software_id
+            text: 'All'
+            background_color: (1, 1, 1, 0.5)
+            ScrollView:
+                id: scroll_all_software_id
+                size_hint:(1, 1)
+                
+        TabbedPanelItem:
+            id: tab_settings_id
+            text: 'Settings'
+            background_color: (1, 1, 1, 0.5)
+            SettingsWithSidebar:
+                id: settings_id
+                size_hint: 1,1  
+                
+    Label:
+        text: "Created by P.Chakour"
+        size_hint: 1, .05
+        halign: 'left'
+        font_size: 9
+        text_size: (self.size[0] - 20, self.size[1] - self.size[1] / 2)
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 0.15
+            Rectangle:
+                pos: self.pos
+                size: self.size
+              
+<Item>:
+    orientation: 'horizontal'
+    size_hint_y:None
+    size_hint_x: 1
+    height:60
+    padding: [20, 0, 20, 0]
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 0.2
+        Line:
+            points: (self.pos[0] + 10, self.pos[1] - self.padding[2] / 2,  self.pos[0] + self.size[0] - 10,  self.pos[1] - self.padding[2] / 2)
+    
+<TabLayout>
+    canvas:
+        Color:
+            rgba: 0, 0, 0, 0.5
+        Rectangle:
+            pos: (self.pos[0], self.pos[1] - 10)
+            size: (self.size[0], self.size[1] + 10)

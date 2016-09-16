@@ -1,0 +1,9 @@
+[
+	{
+        	"type": "string",
+	        "title": "Parameter",
+	        "desc": "Enter value for your parameter",
+	        "section": "section",
+	        "key": "key"
+    	}
+]
