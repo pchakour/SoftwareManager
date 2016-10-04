@@ -61,8 +61,9 @@ class SoftwareManagerGui(BoxLayout):
         self.ids.tab_installed_software_id.bind(on_press = self.retrieveInstalledSoftware)
         
         self.config = ConfigParser()
-        self.config.read(os.path.join('..', 'myconfig.ini'))
-        self.ids.settings_id.add_json_panel('Launcher settings', self.config, os.path.join('..', 'settings.json'))
+        root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        self.config.read(os.path.join(root, 'myconfig.ini'))
+        self.ids.settings_id.add_json_panel('Launcher settings', self.config, os.path.join(root, 'settings.json'))
         self.ids.settings_id.on_config_change = self.onConfigChange
         for address in self.getInstalledSoftware():
             software = Software(address, self.getInstallDir(), self.getInstallFile())
@@ -229,7 +230,11 @@ class SoftwareManagerGui(BoxLayout):
             self.info("The software is up to date")
         
     def getInstallFile(self):
-        install_file = os.path.join(self.config.get("launcher", "install_path"), ".installed")
+        install_dir = self.config.get("launcher", "install_path")
+        if  not os.path.isdir(self.config.get("launcher", "install_path")) :
+            install_dir = ""
+            
+        install_file = os.path.join(install_dir, ".installed")
         if not os.path.isfile(install_file): 
             file = open(install_file, "w")
             file.close()
