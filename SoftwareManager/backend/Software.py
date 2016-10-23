@@ -3,13 +3,14 @@ Created on 12 juin 2016
 
 @author: chakour
 '''
+import configparser
+import subprocess, os.path, shutil
 from SoftwareManager.backend.GitClient import GitClient
-import subprocess, os.path
 from SoftwareManager.utils.Thread import popenAndCall
 
 class Software:
     '''
-    classdocs
+    Manage software life cycle
     '''
     
     gitClient = GitClient()
@@ -30,9 +31,25 @@ class Software:
         self.install_file = install_file
       
       
-    def configure(self):
+    def configure(self, section, key, value):
+        '''
+        Configure software by calling configure python script
+        '''
+        # Getting old value
+        config_path = os.path.join(self.scripts, 'config.ini')
+        config = configparser.ConfigParser()
+        config.read(config_path)
+        old_value = config[section][key]
+
         try :
-            subprocess.check_call("python configure.py", cwd=self.scripts, shell=True)
+            cmd = "python configure.py " + section + " " + key + " " + value + " " + old_value
+            subprocess.check_call(cmd, cwd=self.scripts, shell=True)
+
+            # Save new value in config file
+            config[section][key] = value
+            with open(config_path, 'w') as configfile:
+                config.write(configfile)
+
             return True
         except:
             return False
@@ -46,10 +63,13 @@ class Software:
     def __install_end__(self, options, error):
         if not error : 
             options["button"].text = "Installation end..."
-            # Sauvegarde 
+            # Saving installation information
             self.save()
-             
-            # Patch le fichier config.ini
+            
+            # Create running configuration
+            self.createRunningConfig()
+
+            # Patch config.ini file
             self.patchConfig()
             
             options["callback"](options["callback_options"], False)
@@ -71,7 +91,16 @@ class Software:
         
     def install(self, callback, callback_options, button):
         '''
-        Installation du logiciel
+        Software installation
+
+        Parameters
+        ----------
+        callback : Function
+            Callback to call when installation is completed
+        callback_options : List
+            Callback's options
+        button : kivy.Button
+            Button clicked to launch installation
         '''
         print("Installation of " + self.name)
         
@@ -80,6 +109,16 @@ class Software:
             self.gitClient.clone(self.__install_script__,  {"callback":callback, "callback_options":callback_options, "button":button}, self.address, self.local_address)
         
             
+    def createRunningConfig(self):
+        '''
+        Create running configuration
+        '''
+        # Get the config.ini path
+        config = os.path.join(self.scripts, "config.ini")
+        configRunning = os.path.join(self.scripts, "config_running.ini")
+        # Copy the config.ini file
+        shutil.copyfile(config, configRunning)
+
     def patchConfig(self):
         '''
         '''
@@ -88,9 +127,10 @@ class Software:
         
     def launch(self):
         '''
+        Start software by calling the launch script
         '''
         try:
-            # Appel du script d'installation
+            # Calling installation script
             subprocess.Popen("python launch.py", cwd=self.scripts, shell=True)
             return True
         except:
@@ -98,6 +138,7 @@ class Software:
         
     def update(self):
         '''
+        Update software by pulling information from the remote software
         '''
         
         # Est-ce qu'une mise a jour est necessaire ?
@@ -116,31 +157,39 @@ class Software:
         
     def getName(self):
         '''
+        Return the software name
         '''
         return self.name
     
     def getRemoteIcon(self):
         '''
+        Return the remote software icon
         '''
         return os.path.join(self.address, "..", "icon." + Software.iconExtension)
         
     def getIcon(self):
         '''
+        Return the local software icon
         '''
         return os.path.join(self.scripts, "icon." + Software.iconExtension)
         
     def getConfigPath(self):
         '''
+        Return the software configuration path
         '''
-        return os.path.join(self.scripts, "config.ini")
+        return os.path.join(self.scripts, "config_running.ini")
         
     def getSettingsPath(self):
         '''
+        Return the setting structure file used by kivy
         '''
         return os.path.join(self.scripts, "settings.json")
     
     
     def exist(self):
+        '''
+        Check if the software is already installed
+        '''
         file = open(self.install_file, "r")
         installed = file.read().splitlines()
         result = False
@@ -154,6 +203,9 @@ class Software:
         return result
         
     def save(self):
+        '''
+        Save the software installation informations
+        '''
         file = open(self.install_file, "a")
         file.write(self.address + '\n')
         file.close()  

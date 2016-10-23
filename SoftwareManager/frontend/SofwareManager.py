@@ -1,9 +1,3 @@
-'''
-TabbedPanel
-============
-
-Test of the widget TabbedPanel.
-'''
 import sys
 from kivy.app import App
 from kivy.config import ConfigParser
@@ -74,9 +68,23 @@ class SoftwareManagerGui(BoxLayout):
         
         
     def onConfigChange(self, instance, section, key, value):
+        '''
+        Callback when change on software configuration are detected
+
+        Parameters
+        ----------
+        instance : Config
+            Software configuration.
+        section : String
+            Section of the ini configuration file edited
+        key : String
+            Key of the ini configuration file edited
+        value : String
+            New value edited in the ini configuration file
+        '''
         try :
             software = Software(instance.get("software", "server"), self.getInstallDir(), self.getInstallFile())
-            software.configure()
+            software.configure(section, key, value)
         except:
             # Check if git is executable
             if not GitClient.isBinary(instance.get("git", "binary")) :

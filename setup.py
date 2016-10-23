@@ -4,7 +4,7 @@ import sys, os
 from SoftwareManager.backend.GitClient import GitClient
 import subprocess
 import shutil 
-from colors import red, green, yellow
+#from colors import red, green, yellow
 
 class Commands():
     help = "help"
@@ -42,17 +42,20 @@ def getSetupLocation():
     
 def print_step(text):
     percent = (100 * print_step.current) / print_step.total 
-    print(green("[" + str(percent) + "%] " + text))
+    #print(green("[" + str(percent) + "%] " + text))
+    print("[" + str(percent) + "%] " + text)
     print_step.current += 1
     
 print_step.current = 1
 print_step.total = 0
     
 def print_error(text):
-    print(red("[ERROR] " + text))
+    #print(red("[ERROR] " + text))
+    print("[ERROR] " + text)
     
 def print_warning(text):
-    print(yellow("[WARNING] " + text))
+    #print(yellow("[WARNING] " + text))
+    print("[WARNING] " + text)
     
 # Display usage
 if len(sys.argv) == 1 or sys.argv[1] == Commands.help or not Commands.inList(sys.argv[1]) :
