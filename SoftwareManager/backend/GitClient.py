@@ -82,6 +82,7 @@ class GitClient:
             return False
         
         # Creation d'un backup de l'etat actuel
+        subprocess.call(GitClient.git + " add -A", cwd=local, shell=True)
         subprocess.call(GitClient.git + " commit -m 'backup_update'", cwd=local, shell=True)
 
         # Bascule sur le branche "master" et mise a jour de la branche
