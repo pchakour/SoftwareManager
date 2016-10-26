@@ -15,7 +15,7 @@
         "options" : ["auto", "popup", "manual"]
     },
     {
-        "type": "path",
+        "type": "string",
         "title": "Install directory",
         "desc": "Path to install directory",
         "section": "launcher",
