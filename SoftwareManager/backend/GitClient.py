@@ -24,7 +24,7 @@ class GitClient:
         """
             Extraction de l'identifiant d'un commit 
         """
-        return str(commitId).split("HEAD", 1)[0].strip()
+        return str(commitId).split("refs/heads/master", 1)[0].strip()
 
     @staticmethod
     def isBinary(path):
@@ -102,10 +102,10 @@ class GitClient:
         
         try :
             # Recuperation de l'identifiant du dernier commit local
-            localCommitId = self.__extractCommitId(subprocess.check_output(GitClient.git + " ls-remote \"" + local + "\" HEAD", shell=True))
+            localCommitId = self.__extractCommitId(subprocess.check_output(GitClient.git + " ls-remote \"" + local + "\" refs/heads/master", shell=True))
         
             # Recuperation de l'identifiant du dernier commit distant
-            remoteCommitId = self.__extractCommitId(subprocess.check_output(GitClient.git + " ls-remote \"" + remote + "\" HEAD", shell=True))
+            remoteCommitId = self.__extractCommitId(subprocess.check_output(GitClient.git + " ls-remote \"" + remote + "\" refs/heads/master", shell=True))
                 
             return (localCommitId != remoteCommitId)
         except:
